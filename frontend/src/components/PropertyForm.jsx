@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ImageUploader from './ImageUploader';
 
 const emptyForm = {
   title: '',
@@ -45,12 +46,10 @@ const PropertyForm = ({ initialData, onSubmit, submitLabel = 'Save' }) => {
         lat: form.lat ? Number(form.lat) : undefined,
         lng: form.lng ? Number(form.lng) : undefined,
       },
-      amenities: form.amenities
+      amenities: typeof form.amenities === 'string'
         ? form.amenities.split(',').map((a) => a.trim()).filter(Boolean)
-        : [],
-      images: form.images
-        ? form.images.split(',').map((i) => i.trim()).filter(Boolean)
-        : [],
+        : form.amenities,
+      images: form.images || [], // Now handled properly as an array
     };
 
     onSubmit(payload);
@@ -70,7 +69,7 @@ const PropertyForm = ({ initialData, onSubmit, submitLabel = 'Save' }) => {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>Price (AED)</label>
+          <label className={labelClass}>Price (₹)</label>
           <input name="price" type="number" value={form.price} onChange={handleChange} className={inputClass} required />
         </div>
         <div>
@@ -132,12 +131,19 @@ const PropertyForm = ({ initialData, onSubmit, submitLabel = 'Save' }) => {
 
       <div>
         <label className={labelClass}>Amenities (comma separated)</label>
-        <input name="amenities" value={form.amenities} onChange={handleChange} className={inputClass} />
+        <input 
+          name="amenities" 
+          value={typeof form.amenities === 'array' ? form.amenities.join(', ') : form.amenities} 
+          onChange={handleChange} 
+          className={inputClass} 
+        />
       </div>
 
       <div>
-        <label className={labelClass}>Image URLs (comma separated)</label>
-        <input name="images" value={form.images} onChange={handleChange} className={inputClass} />
+        <ImageUploader 
+          images={form.images || []} 
+          onChange={(newImages) => setForm({ ...form, images: newImages })} 
+        />
       </div>
 
       <button type="submit" className="bg-ink text-paper py-2.5 rounded-sm font-medium hover:bg-ink/90 transition mt-2">

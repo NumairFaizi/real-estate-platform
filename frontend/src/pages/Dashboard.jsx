@@ -4,6 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PropertyForm from '../components/PropertyForm';
 import PropertyCard from '../components/PropertyCard';
+import { formatPriceShort } from '../utils/formatPrice';
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -129,7 +130,7 @@ const Dashboard = () => {
                   city: editingProperty.location?.city,
                   lat: editingProperty.location?.lat,
                   lng: editingProperty.location?.lng,
-                  amenities: editingProperty.amenities?.join(', '),
+                  amenities: editingProperty.amenities,
                   images: editingProperty.images || [],
                 }}
                 onSubmit={handleUpdate}
@@ -147,7 +148,7 @@ const Dashboard = () => {
                 <div>
                   <h3 className="font-display text-lg text-ink">{p.title}</h3>
                   <p className="spec-line text-ink/50 mt-1">
-                    {p.location?.city} · AED {p.price?.toLocaleString()} · {p.status}
+                    {p.location?.city} · {formatPriceShort(p.price)} · {p.status}
                   </p>
                 </div>
                 <div className="flex gap-2 shrink-0">

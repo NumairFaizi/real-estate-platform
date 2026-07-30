@@ -3,7 +3,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const FavoriteButton = ({ propertyId }) => {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [isFavorited, setIsFavorited] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +13,7 @@ const FavoriteButton = ({ propertyId }) => {
   }, [user, propertyId]);
 
   const toggleFavorite = async (e) => {
-    e.preventDefault(); // stops the click bubbling into the card's <Link>
+    e.preventDefault();
     e.stopPropagation();
     if (!user) return;
 
@@ -26,6 +26,7 @@ const FavoriteButton = ({ propertyId }) => {
         await api.post(`/auth/favorites/${propertyId}`);
         setIsFavorited(true);
       }
+      await fetchUser(); // Syncs global context
     } catch (err) {
       // fail silently, button just won't toggle
     } finally {

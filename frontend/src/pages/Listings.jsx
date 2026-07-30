@@ -14,7 +14,6 @@ const Listings = () => {
     setLoading(true);
     setError('');
     try {
-      // remove empty values so we don't send blank query params
       const cleanFilters = Object.fromEntries(
         Object.entries(filters).filter(([_, v]) => v !== '')
       );
@@ -29,10 +28,9 @@ const Listings = () => {
   };
 
   useEffect(() => {
-    // pick up ?city=... if the user searched from the Home page
     const cityFromUrl = searchParams.get('city');
     fetchProperties(cityFromUrl ? { city: cityFromUrl } : {});
-  }, []);
+  }, [searchParams]); // Added searchParams to trigger re-fetch on navigation
 
   return (
     <div className="max-w-7xl mx-auto p-6 md:p-10">

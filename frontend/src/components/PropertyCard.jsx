@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import FavoriteButton from './FavoriteButton';
+import { formatPriceShort } from '../utils/formatPrice';
 
 const PropertyCard = ({ property }) => {
   return (
@@ -20,7 +21,6 @@ const PropertyCard = ({ property }) => {
         )}
       </div>
 
-      {/* rest of the card stays exactly the same */}
       <div className="p-4">
         <span className="spec-line text-oasis">
           {property.propertyType} · For {property.type}
@@ -28,8 +28,8 @@ const PropertyCard = ({ property }) => {
         <h3 className="font-display text-lg mt-1 truncate">{property.title}</h3>
         <p className="text-ink/50 text-sm">{property.location?.city}</p>
         <p className="font-mono text-brass font-medium mt-3 text-lg">
-          AED {property.price?.toLocaleString()}
-          {property.type === 'rent' && <span className="text-sm text-ink/50"> /yr</span>}
+          {formatPriceShort(property.price)}
+          {property.type === 'rent' && <span className="text-sm text-ink/50"> /mo</span>}
         </p>
         <div className="spec-line text-ink/50 mt-3 flex gap-3 border-t border-sand pt-3">
           <span>{property.bedrooms} bed</span>
