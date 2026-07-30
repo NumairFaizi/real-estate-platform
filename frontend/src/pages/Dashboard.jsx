@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PropertyForm from '../components/PropertyForm';
+import PropertyCard from '../components/PropertyCard';
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [myListings, setMyListings] = useState([]);
   const [inquiries, setInquiries] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
   const [tab, setTab] = useState('listings');
@@ -22,6 +24,7 @@ const Dashboard = () => {
     }
     fetchMyListings();
     fetchInquiries();
+    fetchFavorites();
   }, [user, authLoading]);
 
   const fetchMyListings = async () => {
@@ -35,6 +38,15 @@ const Dashboard = () => {
       setInquiries(res.data);
     } catch (err) {
       // agent may have no listings yet, ignore
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await api.get('/auth/favorites');
+      setFavorites(res.data);
+    } catch (err) {
+      // ignore
     }
   };
 
@@ -83,6 +95,7 @@ const Dashboard = () => {
       <div className="flex gap-6 mb-8 border-b border-sand">
         <button onClick={() => setTab('listings')} className={tabClass('listings')}>My listings</button>
         <button onClick={() => setTab('inquiries')} className={tabClass('inquiries')}>Inquiries</button>
+        <button onClick={() => setTab('favorites')} className={tabClass('favorites')}>Saved</button>
       </div>
 
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -170,6 +183,15 @@ const Dashboard = () => {
             </div>
           ))}
           {inquiries.length === 0 && <p className="text-ink/50">No inquiries yet.</p>}
+        </div>
+      )}
+
+      {tab === 'favorites' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {favorites.map((p) => (
+            <PropertyCard key={p._id} property={p} />
+          ))}
+          {favorites.length === 0 && <p className="text-ink/50">No saved properties yet.</p>}
         </div>
       )}
     </div>
