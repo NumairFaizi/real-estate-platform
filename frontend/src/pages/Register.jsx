@@ -27,58 +27,95 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-8 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-6">Register</h2>
+    <div className="min-h-[80vh] flex items-center justify-center px-6 py-12">
+      <div className="max-w-md w-full">
+        <p className="spec-line text-oasis text-center mb-2">Get started</p>
+        <h2 className="font-display text-3xl text-ink text-center mb-8">Create an account</h2>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="bg-white border border-sand rounded-sm p-8">
+          {error && (
+            <p className="text-red-600 text-sm mb-4 border border-red-200 bg-red-50 rounded-sm px-3 py-2">
+              {error}
+            </p>
+          )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="spec-line text-ink/50 block mb-1">Full name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border border-sand rounded-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-brass"
+                required
+              />
+            </div>
 
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="user">Looking for property (User)</option>
-          <option value="agent">Listing property (Agent)</option>
-        </select>
+            <div>
+              <label className="spec-line text-ink/50 block mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-sand rounded-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-brass"
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-slate-900 text-white py-2 rounded hover:bg-slate-800"
-        >
-          {loading ? 'Creating account...' : 'Register'}
-        </button>
-      </form>
+            <div>
+              <label className="spec-line text-ink/50 block mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-sand rounded-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-brass"
+                required
+              />
+            </div>
 
-      <p className="mt-4 text-sm">
-        Already have an account? <Link to="/login" className="text-blue-600">Login</Link>
-      </p>
+            <div>
+              <label className="spec-line text-ink/50 block mb-2">I am a…</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole('user')}
+                  className={`border rounded-sm py-2.5 text-sm transition ${
+                    role === 'user'
+                      ? 'border-oasis bg-oasis/10 text-oasis font-medium'
+                      : 'border-sand text-ink/60 hover:border-ink/30'
+                  }`}
+                >
+                  Buyer / Renter
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('agent')}
+                  className={`border rounded-sm py-2.5 text-sm transition ${
+                    role === 'agent'
+                      ? 'border-oasis bg-oasis/10 text-oasis font-medium'
+                      : 'border-sand text-ink/60 hover:border-ink/30'
+                  }`}
+                >
+                  Agent
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-ink text-paper py-2.5 rounded-sm hover:bg-ink/90 transition font-medium mt-2 disabled:opacity-50"
+            >
+              {loading ? 'Creating account…' : 'Register'}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-sm text-ink/60 mt-6">
+          Already have an account?{' '}
+          <Link to="/login" className="text-oasis font-medium hover:underline">Log in</Link>
+        </p>
+      </div>
     </div>
   );
 };

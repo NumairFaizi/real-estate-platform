@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import PropertyForm from '../components/PropertyForm';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [myListings, setMyListings] = useState([]);
   const [inquiries, setInquiries] = useState([]);
@@ -15,13 +15,14 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
       navigate('/login');
       return;
     }
     fetchMyListings();
     fetchInquiries();
-  }, [user]);
+  }, [user, authLoading]);
 
   const fetchMyListings = async () => {
     const res = await api.get('/properties');
@@ -67,46 +68,47 @@ const Dashboard = () => {
     }
   };
 
+  if (authLoading) return <p className="spec-line text-ink/50 p-10 text-center">Loading…</p>;
   if (!user) return null;
 
-  return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+  const tabClass = (name) =>
+    `pb-2 px-1 spec-line transition ${
+      tab === name ? 'border-b-2 border-brass text-ink' : 'text-ink/40 hover:text-ink/70'
+    }`;
 
-      <div className="flex gap-4 mb-6 border-b">
-        <button
-          onClick={() => setTab('listings')}
-          className={`pb-2 px-2 ${tab === 'listings' ? 'border-b-2 border-slate-900 font-semibold' : 'text-slate-500'}`}
-        >
-          My Listings
-        </button>
-        <button
-          onClick={() => setTab('inquiries')}
-          className={`pb-2 px-2 ${tab === 'inquiries' ? 'border-b-2 border-slate-900 font-semibold' : 'text-slate-500'}`}
-        >
-          Inquiries
-        </button>
+  return (
+    <div className="max-w-6xl mx-auto p-6 md:p-10">
+      <h1 className="font-display text-3xl text-ink mb-8">Dashboard</h1>
+
+      <div className="flex gap-6 mb-8 border-b border-sand">
+        <button onClick={() => setTab('listings')} className={tabClass('listings')}>My listings</button>
+        <button onClick={() => setTab('inquiries')} className={tabClass('inquiries')}>Inquiries</button>
       </div>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       {tab === 'listings' && (
         <>
           {!showForm && !editingProperty && (
-            <button onClick={() => setShowForm(true)} className="bg-slate-900 text-white px-4 py-2 rounded mb-6">
-              + Add New Property
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-brass text-ink px-5 py-2.5 rounded-sm font-medium hover:bg-brass/90 transition mb-8"
+            >
+              + Add new property
             </button>
           )}
 
           {showForm && (
-            <div className="mb-6">
-              <PropertyForm onSubmit={handleCreate} submitLabel="Create Listing" />
-              <button onClick={() => setShowForm(false)} className="text-sm text-slate-500 mt-2">Cancel</button>
+            <div className="mb-8">
+              <PropertyForm onSubmit={handleCreate} submitLabel="Create listing" />
+              <button onClick={() => setShowForm(false)} className="spec-line text-ink/50 mt-3 hover:text-ink">
+                Cancel
+              </button>
             </div>
           )}
 
           {editingProperty && (
-            <div className="mb-6">
+            <div className="mb-8">
               <PropertyForm
                 initialData={{
                   ...editingProperty,
@@ -118,41 +120,56 @@ const Dashboard = () => {
                   images: editingProperty.images?.join(', '),
                 }}
                 onSubmit={handleUpdate}
-                submitLabel="Update Listing"
+                submitLabel="Update listing"
               />
-              <button onClick={() => setEditingProperty(null)} className="text-sm text-slate-500 mt-2">Cancel</button>
+              <button onClick={() => setEditingProperty(null)} className="spec-line text-ink/50 mt-3 hover:text-ink">
+                Cancel
+              </button>
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-3">
             {myListings.map((p) => (
-              <div key={p._id} className="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+              <div key={p._id} className="bg-white border border-sand rounded-sm p-4 flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold">{p.title}</h3>
-                  <p className="text-sm text-slate-500">{p.location?.city} • AED {p.price?.toLocaleString()} • {p.status}</p>
+                  <h3 className="font-display text-lg text-ink">{p.title}</h3>
+                  <p className="spec-line text-ink/50 mt-1">
+                    {p.location?.city} · AED {p.price?.toLocaleString()} · {p.status}
+                  </p>
                 </div>
-                <div className="flex gap-2">
-                  <button onClick={() => setEditingProperty(p)} className="text-sm border px-3 py-1 rounded">Edit</button>
-                  <button onClick={() => handleDelete(p._id)} className="text-sm border border-red-500 text-red-500 px-3 py-1 rounded">Delete</button>
+                <div className="flex gap-2 shrink-0">
+                  <button
+                    onClick={() => setEditingProperty(p)}
+                    className="spec-line border border-sand px-3 py-1.5 rounded-sm hover:border-ink/40 transition"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(p._id)}
+                    className="spec-line border border-red-200 text-red-500 px-3 py-1.5 rounded-sm hover:bg-red-50 transition"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
-            {myListings.length === 0 && <p className="text-slate-500">No listings yet.</p>}
+            {myListings.length === 0 && <p className="text-ink/50">No listings yet.</p>}
           </div>
         </>
       )}
 
       {tab === 'inquiries' && (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {inquiries.map((inq) => (
-            <div key={inq._id} className="bg-white p-4 rounded-lg shadow">
-              <p className="font-semibold">{inq.property?.title}</p>
-              <p className="text-sm text-slate-500">From: {inq.user?.name} ({inq.user?.email})</p>
-              <p className="text-sm text-slate-500">Phone: {inq.contactNumber}</p>
-              <p className="mt-2">{inq.message}</p>
+            <div key={inq._id} className="bg-white border border-sand rounded-sm p-4">
+              <p className="font-display text-lg text-ink">{inq.property?.title}</p>
+              <p className="spec-line text-ink/50 mt-1">
+                {inq.user?.name} · {inq.user?.email} · {inq.contactNumber}
+              </p>
+              <p className="mt-3 text-ink/70">{inq.message}</p>
             </div>
           ))}
-          {inquiries.length === 0 && <p className="text-slate-500">No inquiries yet.</p>}
+          {inquiries.length === 0 && <p className="text-ink/50">No inquiries yet.</p>}
         </div>
       )}
     </div>
