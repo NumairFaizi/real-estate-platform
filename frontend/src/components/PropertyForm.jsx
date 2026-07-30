@@ -87,7 +87,8 @@ const PropertyForm = ({ initialData, onSubmit, submitLabel = 'Save' }) => {
         <select name="propertyType" value={form.propertyType} onChange={handleChange} className={inputClass}>
           <option value="apartment">Apartment</option>
           <option value="villa">Villa</option>
-          <option value="townhouse">Townhouse</option>
+          <option value="independent-house">Independent House</option>
+          <option value="builder-floor">Builder Floor</option>
           <option value="office">Office</option>
           <option value="plot">Plot</option>
         </select>

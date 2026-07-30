@@ -32,7 +32,7 @@ const FilterSidebar = ({ onFilter, initialCity = '' }) => {
       <input
         type="text"
         name="city"
-        placeholder="City"
+        placeholder="City (e.g. Mumbai, Pune)"
         value={filters.city}
         onChange={handleChange}
         className="border p-2 rounded text-sm"
@@ -45,10 +45,10 @@ const FilterSidebar = ({ onFilter, initialCity = '' }) => {
       </select>
 
       <select name="propertyType" value={filters.propertyType} onChange={handleChange} className="border p-2 rounded text-sm">
-        <option value="">Property Type</option>
         <option value="apartment">Apartment</option>
         <option value="villa">Villa</option>
-        <option value="townhouse">Townhouse</option>
+        <option value="independent-house">Independent House</option>
+        <option value="builder-floor">Builder Floor</option>
         <option value="office">Office</option>
         <option value="plot">Plot</option>
       </select>

@@ -20,9 +20,10 @@ const propertySchema = new mongoose.Schema({
   },
   propertyType: {
     type: String,
-    enum: ['apartment', 'villa', 'townhouse', 'office', 'plot'],
+    enum: ['apartment', 'villa', 'independent-house', 'builder-floor', 'plot', 'office'],
     required: true,
   },
+
   bedrooms: {
     type: Number,
     default: 0,

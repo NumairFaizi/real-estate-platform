@@ -96,7 +96,7 @@ const Register = () => {
                       : 'border-sand text-ink/60 hover:border-ink/30'
                   }`}
                 >
-                  Agent
+                  Agent / Owner
                 </button>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { formatPrice } from '../utils/formatPrice';
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -43,6 +44,10 @@ const PropertyDetail = () => {
   if (error && !property) return <p className="text-red-500 p-10 text-center">{error}</p>;
 
   const hasCoords = property.location?.lat && property.location?.lng;
+  const mapCenter = hasCoords
+    ? [property.location.lat, property.location.lng]
+    : [20.5937, 78.9629]; // India center, fallback when no coords set
+  const mapZoom = hasCoords ? 14 : 5;
 
   return (
     <div className="max-w-6xl mx-auto p-6 md:p-10">
@@ -86,8 +91,8 @@ const PropertyDetail = () => {
           <p className="text-ink/50 mt-1">{property.location?.address}, {property.location?.city}</p>
 
           <p className="font-mono text-3xl text-brass font-medium mt-5">
-            AED {property.price?.toLocaleString()}
-            {property.type === 'rent' && <span className="text-base text-ink/50 font-sans"> /year</span>}
+            {formatPrice(property.price)}
+            {property.type === 'rent' && <span className="text-base text-ink/50 font-sans"> /month</span>}
           </p>
 
           <div className="spec-line text-ink/60 flex gap-6 mt-5 border-y border-sand py-4">
@@ -112,23 +117,23 @@ const PropertyDetail = () => {
             </>
           )}
 
-          {hasCoords && (
-            <div className="mt-8">
-              <h3 className="font-display text-xl text-ink mb-3">Location</h3>
-              <div className="h-64 rounded-sm overflow-hidden border border-sand">
-                <MapContainer
-                  center={[property.location.lat, property.location.lng]}
-                  zoom={14}
-                  style={{ height: '100%', width: '100%' }}
-                >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <Marker position={[property.location.lat, property.location.lng]}>
+          <div className="mt-8">
+            <h3 className="font-display text-xl text-ink mb-3">Location</h3>
+            <div className="h-64 rounded-sm overflow-hidden border border-sand">
+              <MapContainer
+                center={mapCenter}
+                zoom={mapZoom}
+                style={{ height: '100%', width: '100%' }}
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {hasCoords && (
+                  <Marker position={mapCenter}>
                     <Popup>{property.title}</Popup>
                   </Marker>
-                </MapContainer>
-              </div>
+                )}
+              </MapContainer>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Right: Inquiry Form */}
