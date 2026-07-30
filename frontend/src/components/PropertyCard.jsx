@@ -4,34 +4,38 @@ const PropertyCard = ({ property }) => {
   return (
     <Link
       to={`/listings/${property._id}`}
-      className="block bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden"
+      className="group block bg-white rounded-sm border border-sand overflow-hidden hover:border-brass transition"
     >
-      <div className="h-48 bg-slate-200 flex items-center justify-center text-slate-400">
+      <div className="h-48 bg-sand/40 flex items-center justify-center text-ink/30 overflow-hidden">
         {property.images?.[0] ? (
-          <img src={property.images[0]} alt={property.title} className="w-full h-full object-cover" />
+          <img
+            src={property.images[0]}
+            alt={property.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+          />
         ) : (
-          <span>No Image</span>
+          <span className="spec-line">No image</span>
         )}
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-lg truncate">{property.title}</h3>
-        <p className="text-slate-500 text-sm">{property.location?.city}</p>
+        <span className="spec-line text-oasis">
+          {property.propertyType} · For {property.type}
+        </span>
 
-        <p className="text-slate-900 font-bold mt-2">
+        <h3 className="font-display text-lg mt-1 truncate">{property.title}</h3>
+        <p className="text-ink/50 text-sm">{property.location?.city}</p>
+
+        <p className="font-mono text-brass font-medium mt-3 text-lg">
           AED {property.price?.toLocaleString()}
-          {property.type === 'rent' && <span className="text-sm font-normal">/yr</span>}
+          {property.type === 'rent' && <span className="text-sm text-ink/50"> /yr</span>}
         </p>
 
-        <div className="flex gap-3 text-sm text-slate-500 mt-2">
-          <span>{property.bedrooms} Beds</span>
-          <span>{property.bathrooms} Baths</span>
+        <div className="spec-line text-ink/50 mt-3 flex gap-3 border-t border-sand pt-3">
+          <span>{property.bedrooms} bed</span>
+          <span>{property.bathrooms} bath</span>
           <span>{property.areaSqft} sqft</span>
         </div>
-
-        <span className="inline-block mt-3 text-xs px-2 py-1 bg-slate-100 rounded capitalize">
-          {property.propertyType} • For {property.type}
-        </span>
       </div>
     </Link>
   );

@@ -5,20 +5,34 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold">RealEstateHub</Link>
-      <div className="flex gap-4 items-center">
-        <Link to="/listings">Listings</Link>
+    <nav className="bg-ink text-paper px-6 md:px-10 py-5 flex justify-between items-center border-b border-brass/30">
+      <Link to="/" className="font-display text-2xl tracking-tight">
+        Real<span className="text-brass">Estate</span>Hub
+      </Link>
+
+      <div className="flex gap-6 items-center spec-line">
+        <Link to="/listings" className="hover:text-brass transition">Listings</Link>
+
         {user ? (
           <>
-            <span>Hi, {user.name}</span>
-            <button onClick={logout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
+            <Link to="/dashboard" className="hover:text-brass transition">Dashboard</Link>
+            <span className="text-sand hidden sm:inline">Hi, {user.name}</span>
+            <button
+              onClick={logout}
+              className="border border-paper/30 px-3 py-1.5 rounded-sm hover:border-brass hover:text-brass transition"
+            >
+              Logout
+            </button>
           </>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-            {user && <Link to="/dashboard">Dashboard</Link>}
+            <Link to="/login" className="hover:text-brass transition">Login</Link>
+            <Link
+              to="/register"
+              className="bg-brass text-ink px-4 py-1.5 rounded-sm hover:bg-brass/90 transition font-medium"
+            >
+              Register
+            </Link>
           </>
         )}
       </div>

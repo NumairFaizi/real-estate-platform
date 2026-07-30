@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const FilterSidebar = ({ onFilter }) => {
+const FilterSidebar = ({ onFilter, initialCity = '' }) => {
   const [filters, setFilters] = useState({
-    city: '',
+    city: initialCity,
     type: '',
     propertyType: '',
     minPrice: '',
