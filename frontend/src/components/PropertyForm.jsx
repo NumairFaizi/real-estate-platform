@@ -14,7 +14,7 @@ const emptyForm = {
   lat: '',
   lng: '',
   amenities: '',
-  images: '',
+  images: [],
 };
 
 const inputClass = "w-full border border-sand rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brass";

@@ -130,7 +130,7 @@ const Dashboard = () => {
                   lat: editingProperty.location?.lat,
                   lng: editingProperty.location?.lng,
                   amenities: editingProperty.amenities?.join(', '),
-                  images: editingProperty.images?.join(', '),
+                  images: editingProperty.images || [],
                 }}
                 onSubmit={handleUpdate}
                 submitLabel="Update listing"
